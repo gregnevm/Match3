@@ -1,65 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using System.Linq;
 using DG.Tweening;
-using UnityEngine.UI;
-using System.Threading.Tasks;
+
 
 public class Board : MonoBehaviour
 {
     public VerticalLine[] lines;
-    public SpawnPoint[] spawnPoints;    
+    public SpawnPoint[] spawnPoints;
 
-    public int Width => _placeHolders.GetLength(0);
-    public int Height => _placeHolders.GetLength(1); 
-    
+    public int GetWidth()
+    {
+        return PlaceHolders.GetLength(0);
+    }
 
-    private PlaceHolder[,] _placeHolders { get; set; }
-    public PlaceHolder GetPlaceHolder(int x, int y) { return _placeHolders[x, y]; }
+    public int GetHeight()
+    {
+        return PlaceHolders.GetLength(1);
+    }
+
+    private PlaceHolder[,] PlaceHolders { get; set; }
+    public PlaceHolder GetPlaceHolder(int x, int y) { return PlaceHolders[x, y]; }
 
     public static Board Instance { get; private set; }
     private void Awake() => Instance = this;
-    Spawner spawn = new Spawner();
+    private readonly Spawner spawn = new Spawner();
 
     // Start is called before the first frame update
     void Start()
     {
-        _placeHolders = new PlaceHolder[lines.Max(lines => lines.placeHolders.Length), lines.Length];
+        PlaceHolders = new PlaceHolder[lines.Max(lines => lines.placeHolders.Length), lines.Length];
         SpawnPlaceholders();
-        StartCoroutine( spawn .AnimatedSpawnBoard());
-        
-        
+        StartCoroutine( spawn.AnimatedSpawnBoard());
     }
-    private void Update()
-    {
-        
-        
-    }
-
+    
     void SpawnPlaceholders()
     {
-        for (var y = 0; y < Height; y++)
+        for (var y = 0; y < GetHeight(); y++)
         {
-            for (var x = 0; x < Width; x++)
+            for (var x = 0; x < GetWidth(); x++)
             {
                 var placeHolder = lines[y].placeHolders[x];
 
-                placeHolder.x = x;
-                placeHolder.y = y;
-                spawnPoints[y].y = y;
+                placeHolder.X = x;
+                placeHolder.Y = y;
+                spawnPoints[y].Y = y;
 
-                _placeHolders[x, y] = placeHolder;
+                PlaceHolders[x, y] = placeHolder;
             }
         }
     }
     public void DestroyAndDrop(Item item )
     {
-        int _x = item.Parent.x;
-        int y = item.Parent.y;
+        int _x = item.Parent.X;
+        int y = item.Parent.Y;
 
         PlaceHolder[] verticalLineArray = lines[y].placeHolders;              
-        item.Parent.state = PlaceHolder.State.empty;
+        item.Parent.ThisState = PlaceHolder.State.empty;
         
         if (_x > 0)
         {
@@ -69,17 +66,16 @@ public class Board : MonoBehaviour
             {
                 newParentTransform = verticalLineArray[x].transform;
                              
-                newItem = verticalLineArray[x - 1].item;
-                verticalLineArray[x].item = newItem;
+                newItem = verticalLineArray[x - 1].Item;
+                verticalLineArray[x].Item = newItem;
                 newItem.transform.SetParent(newParentTransform);
                 newItem.Parent = verticalLineArray[x];
                 newItem.transform.DOLocalMove(Vector3.zero, 0.3f, false);                
-                verticalLineArray[x].state = PlaceHolder.State.newborn;               
-                verticalLineArray[x - 1].state = PlaceHolder.State.empty;                
-            }
-            Destroy(item.gameObject);
-        }        
+                verticalLineArray[x].ThisState = PlaceHolder.State.newborn;               
+                verticalLineArray[x - 1].ThisState = PlaceHolder.State.empty;                
+            }           
+        }
+        Destroy(item.gameObject);
         StartCoroutine(spawn.AnimatedSpawnBoard());        
     }
-
 }

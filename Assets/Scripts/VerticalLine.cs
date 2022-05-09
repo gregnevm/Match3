@@ -4,6 +4,5 @@ using UnityEngine;
 
 public class VerticalLine : MonoBehaviour
 {
-    public PlaceHolder[] placeHolders ;
-  
+    public PlaceHolder[] placeHolders ;  
 }
