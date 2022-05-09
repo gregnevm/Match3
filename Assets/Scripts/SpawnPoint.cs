@@ -5,6 +5,5 @@ using UnityEngine;
 public class SpawnPoint : MonoBehaviour
 {
     private int _y;
-    public int y { set{ _y = y; }  get{ return _y; }}
-
+    public int y { set{ _y = y; }  get{ return _y; }}    
 }

@@ -4,25 +4,16 @@ using UnityEngine;
 
 public class PlaceHolder : MonoBehaviour
 {
+    [Tooltip("x = ")]
     private int _x;
-    public int x
-    {
-        get { return _x; }
-        set { _x = value; }
-    }
+    public int x { get { return _x; } set { _x = value; } }
+    [Tooltip("y = ")]
     private int _y;
-    public int y
-    {
-        get { return _y; }
-        set { _y = value; }
-    }
-    public int X;
-    public int Y;
+    public int y { get { return _y; } set { _y = value; } }
+    
+
     private Item _item;
-    public Item item { get { return _item; } set { _item = value; } }
-
-
-
+    [HideInInspector] public Item item { get{return _item;} set{_item = value;} }
 
     public enum State
     {                
@@ -31,11 +22,7 @@ public class PlaceHolder : MonoBehaviour
         isChecked,
         hasOneSameNeghbourn,
         alreadyInGroupToDestroy,
-
     }
-   
     private State _state = 0;
-    public State state {  get { return _state; }  set { _state = value; } }
-    
-
+    public State state { get{return _state;} set{_state = value;} }
 }
