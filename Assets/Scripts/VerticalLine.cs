@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VerticalLine : MonoBehaviour
 {
-    public PlaceHolder[] placeHolders ;  
+   public GameObject GameObject { get; private set; }  
+   public PlaceHolder[] placeHolders;  
 }

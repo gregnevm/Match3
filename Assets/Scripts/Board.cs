@@ -1,55 +1,33 @@
-
 using UnityEngine;
-using System.Linq;
 using DG.Tweening;
-
 
 public class Board : MonoBehaviour
 {
-    public VerticalLine[] lines;
-    public SpawnPoint[] spawnPoints;
+    public int Width;
+    public int Height;
+    public Spawner spawner;
+    public SpawnPoint spawnPoint;
+    public VerticalLine line;
+    public PlaceHolder placeHolder;
 
-    public int GetWidth()
-    {
-        return PlaceHolders.GetLength(0);
-    }
+    private VerticalLine[] lines;
+    public int GetWidth() { return Width;}
+    public int GetHeight() { return Height;}
 
-    public int GetHeight()
-    {
-        return PlaceHolders.GetLength(1);
-    }
+    private SpawnPoint[] spawnPoints;
 
-    private PlaceHolder[,] PlaceHolders { get; set; }
+    private PlaceHolder[,] PlaceHolders { get;  set; }
     public PlaceHolder GetPlaceHolder(int x, int y) { return PlaceHolders[x, y]; }
 
     public static Board Instance { get; private set; }
     private void Awake() => Instance = this;
-    private readonly Spawner spawn = new Spawner();
 
-    // Start is called before the first frame update
     void Start()
     {
-        PlaceHolders = new PlaceHolder[lines.Max(lines => lines.placeHolders.Length), lines.Length];
-        SpawnPlaceholders();
-        StartCoroutine( spawn.AnimatedSpawnBoard());
+        FullSpawnBoard();
+        StartCoroutine( spawner.AnimatedSpawnBoard(spawnPoints) );
     }
     
-    void SpawnPlaceholders()
-    {
-        for (var y = 0; y < GetHeight(); y++)
-        {
-            for (var x = 0; x < GetWidth(); x++)
-            {
-                var placeHolder = lines[y].placeHolders[x];
-
-                placeHolder.X = x;
-                placeHolder.Y = y;
-                spawnPoints[y].Y = y;
-
-                PlaceHolders[x, y] = placeHolder;
-            }
-        }
-    }
     public void DestroyAndDrop(Item item )
     {
         int _x = item.Parent.X;
@@ -76,6 +54,30 @@ public class Board : MonoBehaviour
             }           
         }
         Destroy(item.gameObject);
-        StartCoroutine(spawn.AnimatedSpawnBoard());        
+        StartCoroutine(spawner.AnimatedSpawnBoard(spawnPoints));        
+    }
+   
+    private void FullSpawnBoard()
+    {
+        spawnPoints = new SpawnPoint[Height];
+        lines = new VerticalLine[Height];
+        PlaceHolders = new PlaceHolder[Width, Height];        
+
+        for (var y = 0; y < GetHeight(); y++)
+        {            
+            lines[y] = Instantiate(Instance.line, Instance.transform);
+            lines[y].transform.DOLocalMove(Vector3.zero, 0, false);            
+            lines[y].placeHolders = new PlaceHolder[Width];
+            spawnPoints[y] = Instantiate(spawnPoint, spawner.transform);
+
+            for (var x = 0; x < GetWidth(); x++)
+            {
+                lines[y].placeHolders[x] = Instantiate(Instance.placeHolder, lines[y].transform);
+                PlaceHolder placeHolder = lines[y].placeHolders[x];                
+                placeHolder.X = x;
+                placeHolder.Y = y;
+                PlaceHolders[x, y] = placeHolder;
+            }
+        }
     }
 }

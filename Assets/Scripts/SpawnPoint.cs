@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class SpawnPoint : MonoBehaviour
 {
     private int _y;
