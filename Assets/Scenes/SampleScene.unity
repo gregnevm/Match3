@@ -374,7 +374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2553d9541f078545a64860032d17be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 6
+  Width: 5
   Height: 5
   spawner: {fileID: 199922027}
   spawnPoint: {fileID: 5718829363690947336, guid: 0df933d0aed924d4a98120eb677525e2, type: 3}

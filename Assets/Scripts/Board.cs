@@ -7,10 +7,8 @@ public class Board : MonoBehaviour
     public int Height;
     public Spawner spawner;
     public SpawnPoint spawnPoint;
-    public VerticalLine line;
-    public PlaceHolder placeHolder;
-
-    private VerticalLine[] lines;
+    public GameObject line;
+    public PlaceHolder placeHolder;    
     public int GetWidth() { return Width;}
     public int GetHeight() { return Height;}
 
@@ -32,8 +30,7 @@ public class Board : MonoBehaviour
     {
         int _x = item.Parent.X;
         int y = item.Parent.Y;
-
-        PlaceHolder[] verticalLineArray = lines[y].placeHolders;              
+            
         item.Parent.ThisState = PlaceHolder.State.empty;
         
         if (_x > 0)
@@ -42,15 +39,15 @@ public class Board : MonoBehaviour
             Transform newParentTransform ;
             for (int x = _x; x > 0; x--)
             {
-                newParentTransform = verticalLineArray[x].transform;
+                newParentTransform = PlaceHolders[x,y].transform;
                              
-                newItem = verticalLineArray[x - 1].Item;
-                verticalLineArray[x].Item = newItem;
+                newItem = PlaceHolders[x - 1,y].Item;
+                PlaceHolders[x,y].Item = newItem;
                 newItem.transform.SetParent(newParentTransform);
-                newItem.Parent = verticalLineArray[x];
-                newItem.transform.DOLocalMove(Vector3.zero, 0.3f, false);                
-                verticalLineArray[x].ThisState = PlaceHolder.State.newborn;               
-                verticalLineArray[x - 1].ThisState = PlaceHolder.State.empty;                
+                newItem.Parent = PlaceHolders[x,y];
+                newItem.transform.DOLocalMove(Vector3.zero, 0.3f, false);
+                PlaceHolders[x,y].ThisState = PlaceHolder.State.newborn;
+                PlaceHolders[x - 1,y].ThisState = PlaceHolder.State.empty;                
             }           
         }
         Destroy(item.gameObject);
@@ -60,23 +57,21 @@ public class Board : MonoBehaviour
     private void FullSpawnBoard()
     {
         spawnPoints = new SpawnPoint[Height];
-        lines = new VerticalLine[Height];
-        PlaceHolders = new PlaceHolder[Width, Height];        
+        PlaceHolders = new PlaceHolder[Width, Height];
+        
+        GameObject[] lines = new GameObject[Height];
+
 
         for (var y = 0; y < GetHeight(); y++)
-        {            
-            lines[y] = Instantiate(Instance.line, Instance.transform);
-            lines[y].transform.DOLocalMove(Vector3.zero, 0, false);            
-            lines[y].placeHolders = new PlaceHolder[Width];
+        {
+            lines[y] = Instantiate(line, Instance.transform);
             spawnPoints[y] = Instantiate(spawnPoint, spawner.transform);
-
             for (var x = 0; x < GetWidth(); x++)
             {
-                lines[y].placeHolders[x] = Instantiate(Instance.placeHolder, lines[y].transform);
-                PlaceHolder placeHolder = lines[y].placeHolders[x];                
-                placeHolder.X = x;
-                placeHolder.Y = y;
-                PlaceHolders[x, y] = placeHolder;
+               PlaceHolders[x,y] = Instantiate(Instance.placeHolder, lines[y].transform);
+                PlaceHolders[x, y].X = x;
+                PlaceHolders[x, y].Y = y;
+                
             }
         }
     }
