@@ -69,8 +69,8 @@ public class Board : MonoBehaviour
             for (var x = 0; x < GetWidth(); x++)
             {
                PlaceHolders[x,y] = Instantiate(Instance.placeHolder, lines[y].transform);
-                PlaceHolders[x, y].X = x;
-                PlaceHolders[x, y].Y = y;
+               PlaceHolders[x, y].X = x;
+               PlaceHolders[x, y].Y = y;
                 
             }
         }

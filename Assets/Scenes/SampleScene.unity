@@ -374,11 +374,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2553d9541f078545a64860032d17be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 5
+  Width: 6
   Height: 5
   spawner: {fileID: 199922027}
   spawnPoint: {fileID: 5718829363690947336, guid: 0df933d0aed924d4a98120eb677525e2, type: 3}
-  line: {fileID: 5092531824323046256, guid: 209f192be83943947b1644d24c304c78, type: 3}
+  line: {fileID: 4869114195653326546, guid: 419b52ca9495e704083d8032af50663d, type: 3}
   placeHolder: {fileID: 6650027486864279786, guid: b06b075dd41b8394d95f65ba8dceb372, type: 3}
 --- !u!1 &1174783078
 GameObject:
