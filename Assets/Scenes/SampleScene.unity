@@ -199,8 +199,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d075d88726c5774b813b4325bd42729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnDuration: 0.17
-  animationSecondsBetwenNewItems: 0.21
+  _spawnDuration: 0.3
+  _animationSecondsBetwenNewItems: 0.1
+  _whiteList: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,12 +375,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2553d9541f078545a64860032d17be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 6
-  Height: 5
-  spawner: {fileID: 199922027}
-  spawnPoint: {fileID: 5718829363690947336, guid: 0df933d0aed924d4a98120eb677525e2, type: 3}
-  line: {fileID: 4869114195653326546, guid: 419b52ca9495e704083d8032af50663d, type: 3}
-  placeHolder: {fileID: 6650027486864279786, guid: b06b075dd41b8394d95f65ba8dceb372, type: 3}
+  _width: 5
+  _height: 6
+  _spawner: {fileID: 199922027}
+  _spawnPoint: {fileID: 5718829363690947336, guid: 0df933d0aed924d4a98120eb677525e2, type: 3}
+  _line: {fileID: 4869114195653326546, guid: 419b52ca9495e704083d8032af50663d, type: 3}
+  _placeHolder: {fileID: 6650027486864279786, guid: 90c5280887530cb43866b556341ddacb, type: 3}
 --- !u!1 &1174783078
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -473,7 +475,7 @@ RectTransform:
   m_GameObject: {fileID: 1885983868}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5.9640007}
-  m_LocalScale: {x: 1.7228581, y: 2.21754, z: 1.7058}
+  m_LocalScale: {x: 1.92, y: 2.21754, z: 1.7058}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

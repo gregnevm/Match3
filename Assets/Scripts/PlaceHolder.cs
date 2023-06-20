@@ -1,18 +1,19 @@
 using UnityEngine;
-
 public class PlaceHolder : MonoBehaviour
 {
+    private State _state = 0;
+    public State ThisState { get{return _state;} set{_state = value;} }
     
-    private int _x;
-    public int X { get { return _x; } set { _x = value; } }
-   
+    private int _x;   
     private int _y;
-    public int Y { get { return _y; } set { _y = value; } }    
+
+    public int X { get { return _x; } set { if (value >= 0) { _x = value; } } }
+    public int Y { get { return _y; } set { if (value >= 0) { _y = value; } } }    
 
     private Item _item;
-    public Item Item { get{return _item;} set{_item = value;} }
+    public Item Item { get{return _item;} private set{_item = value;} }
 
-    public enum State
+    public enum State // There is prototype to better check board for a searching groups to destroy. 
     {                
         empty,
         newborn,
@@ -20,6 +21,8 @@ public class PlaceHolder : MonoBehaviour
         hasOneSameNeghbourn,
         alreadyInGroupToDestroy,
     }
-    private State _state = 0;
-    public State ThisState { get{return _state;} set{_state = value;} }
+    public void SetNewItem(Item item)
+    {
+        _item = item;
+    }
 }

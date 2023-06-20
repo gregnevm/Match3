@@ -3,27 +3,20 @@ using DG.Tweening;
 
 public class Board : MonoBehaviour
 {
-    public int Width;
-    public int Height;
-    public Spawner spawner;
-    public SpawnPoint spawnPoint;
-    public GameObject line;
-    public PlaceHolder placeHolder;    
-    public int GetWidth() { return Width;}
-    public int GetHeight() { return Height;}
+    [SerializeField] int _width;
+    [SerializeField] int _height;
+    [SerializeField] Spawner _spawner;
+    [SerializeField] SpawnPoint _spawnPoint;
+    [SerializeField] GameObject _line;
+    [SerializeField] PlaceHolder _placeHolder;
 
-    private SpawnPoint[] spawnPoints;
-
-    private PlaceHolder[,] PlaceHolders { get;  set; }
-    public PlaceHolder GetPlaceHolder(int x, int y) { return PlaceHolders[x, y]; }
-
-    public static Board Instance { get; private set; }
-    private void Awake() => Instance = this;
+    private SpawnPoint[] _spawnPoints;
+    private PlaceHolder[,] PlaceHolders { get; set; }
 
     void Start()
     {
-        FullSpawnBoard();
-        StartCoroutine( spawner.AnimatedSpawnBoard(spawnPoints) );
+        InitializeBoard();
+        Context.OnItemDestroyedRequest.AddListener(DestroyAndDrop);
     }
     
     public void DestroyAndDrop(Item item )
@@ -36,43 +29,54 @@ public class Board : MonoBehaviour
         if (_x > 0)
         {
             Item newItem;
-            Transform newParentTransform ;
+            
             for (int x = _x; x > 0; x--)
-            {
-                newParentTransform = PlaceHolders[x,y].transform;
-                             
+            {                
                 newItem = PlaceHolders[x - 1,y].Item;
-                PlaceHolders[x,y].Item = newItem;
-                newItem.transform.SetParent(newParentTransform);
-                newItem.Parent = PlaceHolders[x,y];
+                PlaceHolders[x,y].SetNewItem(newItem);
+                newItem.SetNewPlaceholder (PlaceHolders[x,y]);
+                
                 newItem.transform.DOLocalMove(Vector3.zero, 0.3f, false);
                 PlaceHolders[x,y].ThisState = PlaceHolder.State.newborn;
                 PlaceHolders[x - 1,y].ThisState = PlaceHolder.State.empty;                
             }           
         }
         Destroy(item.gameObject);
-        StartCoroutine(spawner.AnimatedSpawnBoard(spawnPoints));        
-    }
-   
-    private void FullSpawnBoard()
+        StartCoroutine(_spawner.AnimatedSpawnBoard(_spawnPoints,_height,_width));        
+    }  
+    
+    private void SpawnBoardElements()
     {
-        spawnPoints = new SpawnPoint[Height];
-        PlaceHolders = new PlaceHolder[Width, Height];
+        Context.CurrentBoardState = Context.BoardState.creating;
+        _spawnPoints = new SpawnPoint[_height];
+        PlaceHolders = new PlaceHolder[_width, _height];
         
-        GameObject[] lines = new GameObject[Height];
+        GameObject[] lines = new GameObject[_height];
 
 
-        for (var y = 0; y < GetHeight(); y++)
+        for (var y = 0; y < _height; y++)
         {
-            lines[y] = Instantiate(line, Instance.transform);
-            spawnPoints[y] = Instantiate(spawnPoint, spawner.transform);
-            for (var x = 0; x < GetWidth(); x++)
+            lines[y] = Instantiate(_line, this.transform);
+            _spawnPoints[y] = Instantiate(_spawnPoint, _spawner.transform);
+            for (var x = 0; x <_width; x++)
             {
-               PlaceHolders[x,y] = Instantiate(Instance.placeHolder, lines[y].transform);
+               PlaceHolders[x,y] = Instantiate(_placeHolder, lines[y].transform);
                PlaceHolders[x, y].X = x;
                PlaceHolders[x, y].Y = y;
                 
-            }
+            }           
         }
+        Context.OnRequestToGetPlaceholder.AddListener(GetPlaceHolder);
+    }
+
+    void GetPlaceHolder((int width, int height) coordinates)
+    {
+        Context.OnSendNeededPlaceholder.Invoke( PlaceHolders[coordinates.width, coordinates.height]);
+    }
+    [ContextMenu("Init new board")]
+    void InitializeBoard()
+    {
+        SpawnBoardElements();
+        StartCoroutine(_spawner.AnimatedSpawnBoard(_spawnPoints, _height, _width));
     }
 }
