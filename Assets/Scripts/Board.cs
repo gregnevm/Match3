@@ -7,19 +7,23 @@ public class Board : MonoBehaviour
     [SerializeField] int _height;
     [SerializeField] Spawner _spawner;
     [SerializeField] SpawnPoint _spawnPoint;
-    [SerializeField] GameObject _line;
+    [SerializeField] GameObject _columnParentPrefab;
     [SerializeField] PlaceHolder _placeHolder;
 
     private SpawnPoint[] _spawnPoints;
-    private PlaceHolder[,] PlaceHolders { get; set; }
+    private PlaceHolder[,] PlaceHolders;
 
     void Start()
     {
         InitializeBoard();
         Context.OnItemDestroyedRequest.AddListener(DestroyAndDrop);
+    }   
+    void InitializeBoard()
+    {
+        SpawnBoardElements();
+        StartCoroutine(_spawner.AnimatedSpawnBoard(_spawnPoints, _height, _width));
     }
-    
-    public void DestroyAndDrop(Item item )
+    public void DestroyAndDrop(BoardItem item )
     {
         int _x = item.Parent.X;
         int y = item.Parent.Y;
@@ -28,14 +32,12 @@ public class Board : MonoBehaviour
         
         if (_x > 0)
         {
-            Item newItem;
+            BoardItem newItem;
             
             for (int x = _x; x > 0; x--)
             {                
                 newItem = PlaceHolders[x - 1,y].Item;
-                PlaceHolders[x,y].SetNewItem(newItem);
-                newItem.SetNewPlaceholder (PlaceHolders[x,y]);
-                
+                PlaceHolders[x,y].SetNewItem( newItem);                
                 newItem.transform.DOLocalMove(Vector3.zero, 0.3f, false);
                 PlaceHolders[x,y].ThisState = PlaceHolder.State.newborn;
                 PlaceHolders[x - 1,y].ThisState = PlaceHolder.State.empty;                
@@ -43,11 +45,10 @@ public class Board : MonoBehaviour
         }
         Destroy(item.gameObject);
         StartCoroutine(_spawner.AnimatedSpawnBoard(_spawnPoints,_height,_width));        
-    }  
-    
+    }
     private void SpawnBoardElements()
     {
-        Context.CurrentBoardState = Context.BoardState.creating;
+        Context.CurrentBoardState = Context.BoardState.Creating;
         _spawnPoints = new SpawnPoint[_height];
         PlaceHolders = new PlaceHolder[_width, _height];
         
@@ -56,7 +57,7 @@ public class Board : MonoBehaviour
 
         for (var y = 0; y < _height; y++)
         {
-            lines[y] = Instantiate(_line, this.transform);
+            lines[y] = Instantiate(_columnParentPrefab, this.transform);
             _spawnPoints[y] = Instantiate(_spawnPoint, _spawner.transform);
             for (var x = 0; x <_width; x++)
             {
@@ -68,15 +69,8 @@ public class Board : MonoBehaviour
         }
         Context.OnRequestToGetPlaceholder.AddListener(GetPlaceHolder);
     }
-
     void GetPlaceHolder((int width, int height) coordinates)
     {
         Context.OnSendNeededPlaceholder.Invoke( PlaceHolders[coordinates.width, coordinates.height]);
-    }
-    [ContextMenu("Init new board")]
-    void InitializeBoard()
-    {
-        SpawnBoardElements();
-        StartCoroutine(_spawner.AnimatedSpawnBoard(_spawnPoints, _height, _width));
     }
 }

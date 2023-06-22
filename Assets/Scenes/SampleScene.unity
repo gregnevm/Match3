@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _width: 5
-  _height: 6
+  _height: 5
   _spawner: {fileID: 199922027}
   _spawnPoint: {fileID: 5718829363690947336, guid: 0df933d0aed924d4a98120eb677525e2, type: 3}
   _line: {fileID: 4869114195653326546, guid: 419b52ca9495e704083d8032af50663d, type: 3}
@@ -475,7 +475,7 @@ RectTransform:
   m_GameObject: {fileID: 1885983868}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5.9640007}
-  m_LocalScale: {x: 1.92, y: 2.21754, z: 1.7058}
+  m_LocalScale: {x: 1.7228581, y: 2.21754, z: 1.7058}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
